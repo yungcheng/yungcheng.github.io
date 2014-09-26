@@ -39,5 +39,22 @@
 			<span>LinkedIn</span>
 		</a>
 		{% endif %}
-	</div>  
+	</div>
+	<div class="footer-col">
+		{% if site.email %}
+        <a href="mailto:{{ site.email }}">
+			<span class="icon">
+				<svg viewBox="0 0 16 16">
+	 				<g>
+					</g>
+					<g>
+					<polygon fill="#828282" points="16.005,2.478 -0.005,2.478 7.999,8.238 	"/>
+					<polygon fill="#828282" points="15.995,5.506 7.995,11.264 -0.005,5.506 -0.005,14.159 15.995,14.159 	"/>
+					</g>
+				</svg>				
+			</span>
+			<span>Contact</span>
+		</a>
+		{% endif %}
+	</div>	  
 </footer>
