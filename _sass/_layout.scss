@@ -83,6 +83,9 @@
 	background-color: #466a7f;
 	background-color: rgba(70, 106, 127,.5);
 	border-bottom: 1px solid #bfffff;
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;	
+	backface-visibility: hidden;	
 }
 
 @include media-query($on-palm) {
@@ -96,7 +99,6 @@
 	-moz-transform: translateZ($hightlight-height / 2);
 	-ms-transform: translateZ($hightlight-height / 2);
 	transform: translateZ($hightlight-height / 2);
-	-webkit-backface-visibility: hidden;
 }
 
 .intro-h2 {
@@ -104,7 +106,6 @@
 	-moz-transform: rotateX(-90deg) translateZ($hightlight-height / 2);
 	-ms-transform: rotateX(-90deg) translateZ($hightlight-height / 2);
 	transform: rotateX(-90deg) translateZ($hightlight-height / 2);
-	-webkit-backface-visibility: hidden;
 }
 
 .intro-h3 {
@@ -112,7 +113,6 @@
 	-moz-transform: rotateX(180deg) translateZ($hightlight-height / 2);
 	-ms-transform: rotateX(180deg) translateZ($hightlight-height / 2);
 	transform: rotateX(180deg) translateZ($hightlight-height / 2);
-	-webkit-backface-visibility: hidden;
 }
 
 .intro-h4 {
@@ -120,7 +120,6 @@
 	-moz-transform: rotateX(90deg) translateZ($hightlight-height / 2);
 	-ms-transform: rotateX(90deg) translateZ($hightlight-height / 2);
 	transform: rotateX(90deg) translateZ($hightlight-height / 2);
-	-webkit-backface-visibility: hidden;
 }
 
 p.intro-text {
