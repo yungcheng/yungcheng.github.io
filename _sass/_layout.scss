@@ -48,14 +48,12 @@
 	-webkit-animation-name: spinner;
 	-webkit-animation-timing-function: ease-in-out;
 	-webkit-animation-iteration-count: infinite;
-	-webkit-animation-duration: 6s;
-	-webkit-animation-play-state: paused;
+	-webkit-animation-duration: 15s;
 	
 	animation-name: spinner;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: infinite;
-	animation-duration: 6s;
-	animation-play-state: paused;
+	animation-duration: 15s;
 	
 	-webkit-transform-style: preserve-3d;
 	-moz-transform-style: preserve-3d;
@@ -88,11 +86,6 @@
 }
 
 @include media-query($on-palm) {
-	.intro-highlight {
-		-webkit-animation-play-state: running;
-		animation-play-state: running;
-	}
-	
     .intro-h-txt {
         width: 100%;
     }
@@ -154,27 +147,37 @@ p.intro-text {
 }
 
 @-webkit-keyframes spinner {
-	from,to { -webkit-transform: rotateX(0deg); }
-	33%  	{ -webkit-transform: rotateX(90deg); }
-	66%  	{ -webkit-transform: rotateX(180deg); }
-	99%	 	{ -webkit-transform: rotateX(270deg); }
+	from,16% { -webkit-transform: rotateX(0deg); }
+	21%,37%  { -webkit-transform: rotateX(90deg); }
+	41%,57%  { -webkit-transform: rotateX(180deg); }
+	61%,77%  { -webkit-transform: rotateX(270deg); }
+	81%,to   { -webkit-transform: rotateX(360deg); }
 }
 
 @keyframes spinner {
-	from,to { 
+	from,16% { 
 		-moz-transform: rotateX(0deg);
+		-ms-transform: rotateX(0deg);
 		transform: rotateX(0deg); 
 	}
-	33%  	{
+	21%,37% {
 		-moz-transform: rotateX(90deg);
+		-ms-transform: rotateX(90deg);
 		transform: rotateX(90deg);
 	}
-	66%  	{ 
+	41%,57% { 
 		-moz-transform: rotateX(180deg);
+		-ms-transform: rotateX(180deg);
 		transform: rotateX(180deg);
 	}
-	99%	 	{ 
+	61%,77%	{ 
 		-moz-transform: rotateX(270deg);
+		-ms-transform: rotateX(270deg);
 		transform: rotateX(270deg);
+	}
+	81%,to {
+		-moz-transform: rotateX(360deg);
+		-ms-transform: rotateX(360deg);
+		transform: rotateX(360deg);		
 	}	
 }
