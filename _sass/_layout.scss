@@ -42,12 +42,81 @@
 }
 
 .intro-highlight {
+	display: block;
+	height: $hightlight-height;
+	
+	-webkit-animation-name: spinner;
+	-webkit-animation-timing-function: ease-in-out;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-duration: 6s;
+	-webkit-animation-play-state: paused;
+	
+	animation-name: spinner;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: infinite;
+	animation-duration: 6s;
+	animation-play-state: paused;
+	
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+
+	-webkit-transform-origin: center;
+	-moz-transform-origin: center;
+	-ms-transform-origin: center;
+	transform-origin: center;
+}
+
+.intro-highlight:hover {
+	-webkit-animation-play-state: running;
+	animation-play-state: running;
+}
+
+.intro-h-txt {
+	position: absolute;
+	width: 50%;
+	height: $hightlight-height;
+	display: block;
 	font-weight: 200;
 	font-style: italic;
 	font-size: 30px;
 	color: #bfffff;
 	background-color: #466a7f;
 	background-color: rgba(70, 106, 127,.5);
+	border-bottom: 1px solid #bfffff;
+}
+
+.intro-h1 {
+	-webkit-transform: translateZ($hightlight-height / 2);
+	-moz-transform: translateZ($hightlight-height / 2);
+	-ms-transform: translateZ($hightlight-height / 2);
+	transform: translateZ($hightlight-height / 2);
+	-webkit-backface-visibility: hidden;
+}
+
+.intro-h2 {
+	-webkit-transform: rotateX(-90deg) translateZ($hightlight-height / 2);
+	-moz-transform: rotateX(-90deg) translateZ($hightlight-height / 2);
+	-ms-transform: rotateX(-90deg) translateZ($hightlight-height / 2);
+	transform: rotateX(-90deg) translateZ($hightlight-height / 2);
+	-webkit-backface-visibility: hidden;
+}
+
+.intro-h3 {
+	-webkit-transform: rotateX(180deg) translateZ($hightlight-height / 2);
+	-moz-transform: rotateX(180deg) translateZ($hightlight-height / 2);
+	-ms-transform: rotateX(180deg) translateZ($hightlight-height / 2);
+	transform: rotateX(180deg) translateZ($hightlight-height / 2);
+	-webkit-backface-visibility: hidden;
+}
+
+.intro-h4 {
+	-webkit-transform: rotateX(90deg) translateZ($hightlight-height / 2);
+	-moz-transform: rotateX(90deg) translateZ($hightlight-height / 2);
+	-ms-transform: rotateX(90deg) translateZ($hightlight-height / 2);
+	transform: rotateX(90deg) translateZ($hightlight-height / 2);
+	-webkit-backface-visibility: hidden;
 }
 
 p.intro-text {
@@ -60,4 +129,41 @@ p.intro-text {
 
 .intro-job {
 	margin: 0 0 76px 0;
+}
+
+/**
+ * Animation
+ */
+.animation-container {
+	-webkit-perspective: 2000px;
+	-moz-perspective: 2000px;
+	-ms-perspective: 2000px;
+	perspective: 2000px;
+	display: block;
+}
+
+@-webkit-keyframes spinner {
+	from,to { -webkit-transform: rotateX(0deg); }
+	33%  	{ -webkit-transform: rotateX(90deg); }
+	66%  	{ -webkit-transform: rotateX(180deg); }
+	99%	 	{ -webkit-transform: rotateX(270deg); }
+}
+
+@keyframes spinner {
+	from,to { 
+		-moz-transform: rotateX(0deg);
+		transform: rotateX(0deg); 
+	}
+	33%  	{
+		-moz-transform: rotateX(90deg);
+		transform: rotateX(90deg);
+	}
+	66%  	{ 
+		-moz-transform: rotateX(180deg);
+		transform: rotateX(180deg);
+	}
+	99%	 	{ 
+		-moz-transform: rotateX(270deg);
+		transform: rotateX(270deg);
+	}	
 }
