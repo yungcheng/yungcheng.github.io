@@ -87,6 +87,12 @@
 	border-bottom: 1px solid #bfffff;
 }
 
+@include media-query($on-palm) {
+    .intro-h-txt {
+        width: 100%;
+    }
+}
+
 .intro-h1 {
 	-webkit-transform: translateZ($hightlight-height / 2);
 	-moz-transform: translateZ($hightlight-height / 2);
