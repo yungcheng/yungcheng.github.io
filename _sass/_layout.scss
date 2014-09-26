@@ -88,6 +88,11 @@
 }
 
 @include media-query($on-palm) {
+	.intro-highlight {
+		-webkit-animation-play-state: running;
+		animation-play-state: running;
+	}
+	
     .intro-h-txt {
         width: 100%;
     }
