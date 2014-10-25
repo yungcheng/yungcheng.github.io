@@ -48,12 +48,12 @@
 	-webkit-animation-name: spinner;
 	-webkit-animation-timing-function: ease-in-out;
 	-webkit-animation-iteration-count: infinite;
-	-webkit-animation-duration: 15s;
+	-webkit-animation-duration: 8s;
 	
 	animation-name: spinner;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: infinite;
-	animation-duration: 15s;
+	animation-duration: 8s;
 	
 	-webkit-transform-style: preserve-3d;
 	-moz-transform-style: preserve-3d;
@@ -137,9 +137,9 @@ p.intro-text {
 @-webkit-keyframes spinner {
 	from,16% { -webkit-transform: rotateX(0deg); }
 	21%,37%  { -webkit-transform: rotateX(90deg); }
-	41%,57%  { -webkit-transform: rotateX(180deg); }
-	61%,77%  { -webkit-transform: rotateX(270deg); }
-	81%,to   { -webkit-transform: rotateX(360deg); }
+	42%,58%  { -webkit-transform: rotateX(180deg); }
+	63%,79%  { -webkit-transform: rotateX(270deg); }
+	84%,to   { -webkit-transform: rotateX(360deg); }
 }
 
 @keyframes spinner {
@@ -151,15 +151,15 @@ p.intro-text {
 		-moz-transform: rotateX(90deg);
 		transform: rotateX(90deg);
 	}
-	41%,57% { 
+	42%,58% { 
 		-moz-transform: rotateX(180deg);
 		transform: rotateX(180deg);
 	}
-	61%,77%	{ 
+	63%,79%	{ 
 		-moz-transform: rotateX(270deg);
 		transform: rotateX(270deg);
 	}
-	81%,to {
+	84%,to {
 		-moz-transform: rotateX(360deg);
 		transform: rotateX(360deg);		
 	}	
