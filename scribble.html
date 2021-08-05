@@ -3,7 +3,7 @@
     <script>
       function generateSnDurl(originalUrl) {
         const [productNumber, productName, , ...rest] = originalUrl.split('/').reverse();
-        return `https://www.titan.fitness/scratch-and-dent/scratch-and-dent---${productName}---final-sale/R${productNumber}`;
+        return `https://www.titan.fitness/sale/scratch-and-dent/scratch-and-dent---${productName}---final-sale/R${productNumber}`;
       }
     </script>
   </head>
@@ -18,7 +18,7 @@
     </form>
 
     <p>S&D redirect scriptlet, drag the following link to bookmark bar, and click it whenever you are on a Titan product page. Redirects to S&D product page.</p>
-    <a href="javascript:(function(){ if (window.location.host.endsWith('titan.fitness')) { const [productNumber, productName, , ...rest] = window.location.href.split('/').reverse(); window.location.href = `https://www.titan.fitness/scratch-and-dent/scratch-and-dent---${productName}---final-sale/R${productNumber}`; } })();">s&d gen</a>
+    <a href="javascript:(function(){ if (window.location.host.endsWith('titan.fitness')) { const [productNumber, productName, , ...rest] = window.location.href.split('/').reverse(); window.location.href = `https://www.titan.fitness/sale/scratch-and-dent/scratch-and-dent---${productName}---final-sale/R${productNumber}`; } })();">s&d gen</a>
 
   </body>
 </html>
