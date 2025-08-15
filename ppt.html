@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printed Part Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .go-button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .go-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .go-button:active {
+            transform: translateY(0);
+        }
+
+        .go-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-container {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .result-header h3 {
+            color: #333;
+            font-size: 1.3em;
+        }
+
+        .result-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .copy-button, .generate-button {
+            padding: 8px 16px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .copy-button {
+            background: #28a745;
+        }
+
+        .copy-button:hover {
+            background: #218838;
+        }
+
+        .generate-button {
+            background: #007bff;
+        }
+
+        .generate-button:hover {
+            background: #0056b3;
+        }
+
+        /* Checklist Styles */
+        .checklist-container {
+            display: none;
+            margin-top: 30px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            background: white;
+        }
+
+        .checklist-container.show {
+            display: block;
+        }
+
+        .checklist-header {
+            margin-bottom: 20px;
+        }
+
+        .checklist-header h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+
+        .checklist-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .progress-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .checklist-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-button, .print-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-button {
+            background: #6c757d;
+            color: white;
+        }
+
+        .control-button:hover {
+            background: #545b62;
+        }
+
+        .print-button {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .print-button:hover {
+            background: #138496;
+        }
+
+        .checklist-content {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .checklist-category {
+            margin-bottom: 20px;
+        }
+
+        .category-header {
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            background: #f8f9fa;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            color: #495057;
+            flex: 1;
+        }
+
+        .checklist-item.completed label {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            .checklist-container, 
+            .checklist-container * {
+                visibility: visible;
+            }
+            
+            .checklist-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 20px;
+                border: none;
+            }
+            
+            .checklist-buttons {
+                display: none;
+            }
+            
+            .progress-bar {
+                display: none;
+            }
+            
+            .checklist-content {
+                max-height: none;
+                overflow: visible;
+                border: none;
+                padding: 0;
+            }
+            
+            .checklist-item {
+                page-break-inside: avoid;
+                margin-bottom: 8px;
+            }
+            
+            .category-header {
+                page-break-after: avoid;
+                background: #f0f0f0 !important;
+            }
+        }
+
+        .result-json {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .example {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .example-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .example-url {
+            font-family: monospace;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Printed Part Tracker</h1>
+            <p>Analyze GitHub repositories to extract STL file structures and generate organized JSON catalogs for 3D printing projects.</p>
+        </div>
+
+        <div class="example">
+            <div class="example-label">Example:</div>
+            <div class="example-url">https://github.com/PrintersForAnts/Micron</div>
+        </div>
+
+        <div class="input-group">
+            <input 
+                type="text" 
+                id="repoUrl" 
+                class="input-field" 
+                placeholder="Enter GitHub repository URL (e.g., https://github.com/PrintersForAnts/Micron)"
+                value=""
+            >
+            <button id="goButton" class="go-button">Go</button>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <span>Analyzing repository...</span>
+        </div>
+
+        <div id="resultContainer" class="result-container">
+            <div class="result-header">
+                <h3>STL File Structure</h3>
+                <div class="result-buttons">
+                    <button id="copyButton" class="copy-button">Copy JSON</button>
+                    <button id="generateChecklistButton" class="generate-button">Generate Checklist</button>
+                </div>
+            </div>
+            <div id="resultJson" class="result-json"></div>
+        </div>
+
+        <div id="checklistContainer" class="checklist-container">
+            <div class="checklist-header">
+                <h3>📋 Printed Parts Tracking List</h3>
+                <div class="checklist-controls">
+                    <div class="progress-info">
+                        <span id="progressText">0 / 0 parts printed</span>
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="checklist-buttons">
+                        <button id="selectAllButton" class="control-button">Select All</button>
+                        <button id="clearAllButton" class="control-button">Clear All</button>
+                        <button id="printChecklistButton" class="print-button">🖨️ Print List</button>
+                    </div>
+                </div>
+            </div>
+            <div id="checklistContent" class="checklist-content"></div>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+    </div>
+
+    <script>
+        const repoUrlInput = document.getElementById('repoUrl');
+        const goButton = document.getElementById('goButton');
+        const loading = document.getElementById('loading');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultJson = document.getElementById('resultJson');
+        const copyButton = document.getElementById('copyButton');
+        const generateChecklistButton = document.getElementById('generateChecklistButton');
+        const checklistContainer = document.getElementById('checklistContainer');
+        const checklistContent = document.getElementById('checklistContent');
+        const selectAllButton = document.getElementById('selectAllButton');
+        const clearAllButton = document.getElementById('clearAllButton');
+        const printChecklistButton = document.getElementById('printChecklistButton');
+        const progressText = document.getElementById('progressText');
+        const progressFill = document.getElementById('progressFill');
+        const errorDiv = document.getElementById('error');
+
+        let currentResult = null;
+        let checklistData = [];
+        let currentRepoName = '';
+
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            resultContainer.classList.remove('show');
+        }
+
+        function hideError() {
+            errorDiv.style.display = 'none';
+        }
+
+        function showLoading() {
+            loading.classList.add('show');
+            goButton.disabled = true;
+            hideError();
+            resultContainer.classList.remove('show');
+        }
+
+        function hideLoading() {
+            loading.classList.remove('show');
+            goButton.disabled = false;
+        }
+
+        function showResult(data) {
+            currentResult = data;
+            resultJson.textContent = JSON.stringify(data, null, 2);
+            resultContainer.classList.add('show');
+        }
+
+        // Helper function to extract owner and repo from GitHub URL
+        function parseGitHubUrl(url) {
+            const regex = /github\.com\/([^\/]+)\/([^\/]+)/;
+            const match = url.match(regex);
+            
+            if (!match) {
+                throw new Error('Invalid GitHub URL format');
+            }
+            
+            return {
+                owner: match[1],
+                repo: match[2].replace('.git', '') // Remove .git if present
+            };
+        }
+
+        // Helper function to get repository contents from GitHub API
+        async function getRepoContents(owner, repo, path = '') {
+            const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+            const response = await fetch(url, {
+                headers: {
+                    'User-Agent': 'PrintedPartTracker',
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Repository not found or path does not exist');
+                } else if (response.status === 403) {
+                    throw new Error('API rate limit exceeded. Please try again later.');
+                } else {
+                    throw new Error(`GitHub API error: ${response.statusText}`);
+                }
+            }
+
+            return await response.json();
+        }
+
+        // Helper function to check if a name is STL-related
+        function isSTLFolder(name) {
+            const normalizedName = name.toLowerCase();
+            return normalizedName === 'stl' || 
+                   normalizedName === 'stls' || 
+                   normalizedName.includes('stl');
+        }
+
+        // Helper function to check if a file is an STL file
+        function isSTLFile(name) {
+            return name.toLowerCase().endsWith('.stl');
+        }
+
+        // Recursive function to process folder structure
+        async function processFolder(owner, repo, folderPath, folderName) {
+            try {
+                const contents = await getRepoContents(owner, repo, folderPath);
+                const result = [];
+                
+                for (const item of contents) {
+                    if (item.type === 'file' && isSTLFile(item.name)) {
+                        // Add STL files directly to the array
+                        result.push(item.name);
+                    } else if (item.type === 'dir') {
+                        // For directories, create an object with the folder name as key
+                        const subFolderContents = await processFolder(owner, repo, item.path, item.name);
+                        if (subFolderContents.length > 0) {
+                            // Only include folders that contain STL files or subfolders with STL files
+                            const folderObject = {};
+                            folderObject[item.name] = subFolderContents;
+                            result.push(folderObject);
+                        }
+                    }
+                }
+                
+                return result;
+            } catch (error) {
+                console.error(`Error processing folder ${folderPath}:`, error.message);
+                return [];
+            }
+        }
+
+        // Main function to find and process STL folders
+        async function findSTLFolders(owner, repo) {
+            try {
+                // Get root contents
+                const rootContents = await getRepoContents(owner, repo);
+                const result = {};
+                
+                // Look for STL folders in root
+                for (const item of rootContents) {
+                    if (item.type === 'dir' && isSTLFolder(item.name)) {
+                        console.log(`Found STL folder: ${item.name}`);
+                        const folderContents = await processFolder(owner, repo, item.path, item.name);
+                        if (folderContents.length > 0) {
+                            result[item.name] = folderContents;
+                        }
+                    }
+                }
+                
+                // If no STL folders found in root, search one level deep
+                if (Object.keys(result).length === 0) {
+                    console.log('No STL folders found in root, searching subdirectories...');
+                    
+                    for (const item of rootContents) {
+                        if (item.type === 'dir') {
+                            try {
+                                const subContents = await getRepoContents(owner, repo, item.path);
+                                for (const subItem of subContents) {
+                                    if (subItem.type === 'dir' && isSTLFolder(subItem.name)) {
+                                        console.log(`Found STL folder in ${item.name}: ${subItem.name}`);
+                                        const folderContents = await processFolder(owner, repo, subItem.path, subItem.name);
+                                        if (folderContents.length > 0) {
+                                            if (!result[item.name]) {
+                                                result[item.name] = {};
+                                            }
+                                            result[item.name][subItem.name] = folderContents;
+                                        }
+                                    }
+                                }
+                            } catch (error) {
+                                // Skip folders that can't be accessed
+                                console.log(`Skipping folder ${item.name}: ${error.message}`);
+                            }
+                        }
+                    }
+                }
+                
+                return result;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // Checklist functionality
+        function parseJsonToChecklist(jsonData, parentPath = '') {
+            const items = [];
+            
+            for (const [key, value] of Object.entries(jsonData)) {
+                const currentPath = parentPath ? `${parentPath} > ${key}` : key;
+                
+                if (Array.isArray(value)) {
+                    // Process array of files and subfolders
+                    for (const item of value) {
+                        if (typeof item === 'string') {
+                            // It's a file
+                            items.push({
+                                file: item,
+                                category: currentPath,
+                                id: `${currentPath}_${item}`,
+                                checked: false
+                            });
+                        } else if (typeof item === 'object') {
+                            // It's a subfolder, recursively process it
+                            items.push(...parseJsonToChecklist(item, currentPath));
+                        }
+                    }
+                } else if (typeof value === 'object') {
+                    // Direct object (shouldn't happen in our structure, but handle it)
+                    items.push(...parseJsonToChecklist(value, currentPath));
+                }
+            }
+            
+            return items;
+        }
+
+        function generateChecklist() {
+            if (!currentResult) {
+                showError('No STL data available. Please analyze a repository first.');
+                return;
+            }
+
+            // Parse JSON to checklist format
+            checklistData = parseJsonToChecklist(currentResult);
+            
+            if (checklistData.length === 0) {
+                showError('No STL files found to create checklist.');
+                return;
+            }
+
+            // Group items by category
+            const groupedItems = {};
+            checklistData.forEach(item => {
+                if (!groupedItems[item.category]) {
+                    groupedItems[item.category] = [];
+                }
+                groupedItems[item.category].push(item);
+            });
+
+            // Generate HTML
+            let html = '';
+            for (const [category, items] of Object.entries(groupedItems)) {
+                html += `<div class="checklist-category">`;
+                html += `<div class="category-header">${category}</div>`;
+                
+                items.forEach(item => {
+                    html += `
+                        <div class="checklist-item" data-id="${item.id}">
+                            <input type="checkbox" id="check_${item.id}" data-file-id="${item.id}">
+                            <label for="check_${item.id}">${item.file}</label>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+
+            checklistContent.innerHTML = html;
+            checklistContainer.classList.add('show');
+            
+            // Add event listeners to checkboxes
+            attachCheckboxListeners();
+            updateProgress();
+            
+            // Load saved state
+            loadChecklistState();
+        }
+
+        function attachCheckboxListeners() {
+            const checkboxes = checklistContent.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const item = this.closest('.checklist-item');
+                    const fileId = this.dataset.fileId;
+                    
+                    // Update data
+                    const dataItem = checklistData.find(d => d.id === fileId);
+                    if (dataItem) {
+                        dataItem.checked = this.checked;
+                    }
+                    
+                    // Update UI
+                    if (this.checked) {
+                        item.classList.add('completed');
+                    } else {
+                        item.classList.remove('completed');
+                    }
+                    
+                    updateProgress();
+                    saveChecklistState();
+                });
+            });
+        }
+
+        function updateProgress() {
+            const total = checklistData.length;
+            const completed = checklistData.filter(item => item.checked).length;
+            const percentage = total > 0 ? (completed / total) * 100 : 0;
+            
+            progressText.textContent = `${completed} / ${total} parts printed`;
+            progressFill.style.width = `${percentage}%`;
+        }
+
+        function selectAll() {
+            checklistData.forEach(item => {
+                item.checked = true;
+            });
+            updateChecklistUI();
+            updateProgress();
+            saveChecklistState();
+        }
+
+        function clearAll() {
+            checklistData.forEach(item => {
+                item.checked = false;
+            });
+            updateChecklistUI();
+            updateProgress();
+            saveChecklistState();
+        }
+
+        function updateChecklistUI() {
+            const checkboxes = checklistContent.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                const fileId = checkbox.dataset.fileId;
+                const dataItem = checklistData.find(d => d.id === fileId);
+                const item = checkbox.closest('.checklist-item');
+                
+                if (dataItem) {
+                    checkbox.checked = dataItem.checked;
+                    if (dataItem.checked) {
+                        item.classList.add('completed');
+                    } else {
+                        item.classList.remove('completed');
+                    }
+                }
+            });
+        }
+
+        function printChecklist() {
+            window.print();
+        }
+
+        function saveChecklistState() {
+            if (currentRepoName && checklistData.length > 0) {
+                const state = {
+                    repoName: currentRepoName,
+                    timestamp: new Date().toISOString(),
+                    items: checklistData.map(item => ({
+                        id: item.id,
+                        checked: item.checked
+                    }))
+                };
+                localStorage.setItem(`checklist_${currentRepoName}`, JSON.stringify(state));
+            }
+        }
+
+        function loadChecklistState() {
+            if (currentRepoName) {
+                const saved = localStorage.getItem(`checklist_${currentRepoName}`);
+                if (saved) {
+                    try {
+                        const state = JSON.parse(saved);
+                        state.items.forEach(savedItem => {
+                            const dataItem = checklistData.find(d => d.id === savedItem.id);
+                            if (dataItem) {
+                                dataItem.checked = savedItem.checked;
+                            }
+                        });
+                        updateChecklistUI();
+                        updateProgress();
+                    } catch (e) {
+                        console.error('Error loading checklist state:', e);
+                    }
+                }
+            }
+        }
+
+        async function analyzeRepository() {
+            const url = repoUrlInput.value.trim();
+            
+            if (!url) {
+                showError('Please enter a GitHub repository URL');
+                return;
+            }
+
+            // Basic URL validation
+            if (!url.includes('github.com')) {
+                showError('Please enter a valid GitHub repository URL');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                console.log(`Analyzing repository: ${url}`);
+                
+                // Parse GitHub URL
+                const { owner, repo } = parseGitHubUrl(url);
+                console.log(`Parsed: owner=${owner}, repo=${repo}`);
+                currentRepoName = `${owner}_${repo}`;
+                
+                // Find and process STL folders
+                const result = await findSTLFolders(owner, repo);
+                
+                if (Object.keys(result).length === 0) {
+                    showError('No STL folders found in this repository');
+                    return;
+                }
+                
+                console.log('Analysis complete');
+                showResult(result);
+                
+            } catch (error) {
+                console.error('Error analyzing repository:', error.message);
+                showError(`Error: ${error.message}`);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function copyToClipboard() {
+            if (currentResult) {
+                navigator.clipboard.writeText(JSON.stringify(currentResult, null, 2))
+                    .then(() => {
+                        const originalText = copyButton.textContent;
+                        copyButton.textContent = 'Copied!';
+                        copyButton.style.background = '#28a745';
+                        setTimeout(() => {
+                            copyButton.textContent = originalText;
+                            copyButton.style.background = '#28a745';
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+            }
+        }
+
+        goButton.addEventListener('click', analyzeRepository);
+        copyButton.addEventListener('click', copyToClipboard);
+        generateChecklistButton.addEventListener('click', generateChecklist);
+        selectAllButton.addEventListener('click', selectAll);
+        clearAllButton.addEventListener('click', clearAll);
+        printChecklistButton.addEventListener('click', printChecklist);
+
+        repoUrlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                analyzeRepository();
+            }
+        });
+
+        // Focus on input when page loads
+        repoUrlInput.focus();
+    </script>
+</body>
+</html>
