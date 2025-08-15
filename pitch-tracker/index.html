@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Pitch Tracker">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#667eea">
+    <title>Pitch Tracker - Baseball Pitch Sequencing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚾ Pitch Tracker</h1>
+            <p>Track pitching sequences for better at-bat analysis</p>
+        </header>
+
+        <main>
+            <!-- Player Info Section -->
+            <section class="player-info">
+                <h2>Player Information</h2>
+                <div class="info-form">
+                    <div class="form-group">
+                        <label for="teamName">Team Name:</label>
+                        <input type="text" id="teamName" placeholder="e.g., Elevate 10U">
+                    </div>
+                    <div class="form-group">
+                        <label for="playerNumber">Player Number:</label>
+                        <input type="text" id="playerNumber" placeholder="e.g., #3">
+                    </div>
+                    <div class="form-group">
+                        <label for="atBatDate">Date:</label>
+                        <input type="date" id="atBatDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="atBatNumber">At-Bat #:</label>
+                        <input type="number" id="atBatNumber" min="1" value="1">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Current At-Bat Section -->
+            <section class="current-atbat">
+                <h2>Current At-Bat</h2>
+                <div class="current-sequence" id="currentSequence">
+                    <p>Pitch sequence will appear here...</p>
+                </div>
+            </section>
+
+            <!-- Pitch Input Section -->
+            <section class="pitch-input">
+                <h2>Record Pitch</h2>
+                
+                <!-- Pitch Type Selection -->
+                <div class="pitch-types">
+                    <h3>Pitch Type</h3>
+                    <div class="button-group pitch-button-grid">
+                        <button class="pitch-btn" data-pitch="four-seam">4-Seam</button>
+                        <button class="pitch-btn" data-pitch="two-seam">2-Seam</button>
+                        <button class="pitch-btn" data-pitch="curve">Curve</button>
+                        <button class="pitch-btn" data-pitch="changeup">Changeup</button>
+                        <button class="pitch-btn" data-pitch="cutter">Cutter</button>
+                        <button class="pitch-btn" data-pitch="slider">Slider</button>
+                    </div>
+                </div>
+
+                <!-- Strike Zone Grid -->
+                <div class="strike-zone">
+                    <h3>Pitch Location</h3>
+                    <div class="zone-grid">
+                        <button class="zone-btn" data-location="1">1</button>
+                        <button class="zone-btn" data-location="2">2</button>
+                        <button class="zone-btn" data-location="3">3</button>
+                        <button class="zone-btn" data-location="4">4</button>
+                        <button class="zone-btn" data-location="5">5</button>
+                        <button class="zone-btn" data-location="6">6</button>
+                        <button class="zone-btn" data-location="7">7</button>
+                        <button class="zone-btn" data-location="8">8</button>
+                        <button class="zone-btn" data-location="9">9</button>
+                    </div>
+                </div>
+
+                <!-- Result Selection -->
+                <div class="pitch-results">
+                    <h3>Result</h3>
+                    <div class="button-group">
+                        <button class="result-btn" data-result="strike">Strike</button>
+                        <button class="result-btn" data-result="ball">Ball</button>
+                        <button class="result-btn" data-result="hit">Hit</button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="actions">
+                    <button id="addPitch" class="action-btn primary" disabled>Add Pitch</button>
+                    <button id="finishAtBat" class="action-btn secondary">Finish At-Bat</button>
+                    <button id="clearSequence" class="action-btn danger">Clear Sequence</button>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section class="history">
+                <h2>Pitch History</h2>
+                <div class="history-controls">
+                    <input type="text" id="searchPlayer" placeholder="Search by team and player...">
+                    <button id="clearHistory" class="action-btn danger">Clear All History</button>
+                </div>
+                <div id="historyDisplay" class="history-display">
+                    <p>No pitch history available. Start tracking pitches!</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
