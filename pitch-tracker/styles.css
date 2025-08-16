@@ -738,6 +738,7 @@ section h3 {
 .zone-up, .zone-down {
     min-width: 196px; /* Exact width: 3 zones × 60px + 2 gaps × 8px = 180px + 16px = 196px */
     min-height: 55px; /* Closer to button "1" height (60px) for better proportion */
+    max-height: 60px; /* Should not exceed button "1" height */
     font-size: 1.1rem;
     background: #e2e8f0;
     border-color: #4a5568;
@@ -745,6 +746,7 @@ section h3 {
 
 .zone-left, .zone-right {
     min-width: 55px; /* Closer to button "1" width (60px) for better proportion */
+    max-width: 60px; /* Should not exceed button "1" width */
     min-height: 196px; /* Exact height: 3 zones × 60px + 2 gaps × 8px = 180px + 16px = 196px */
     font-size: 1.1rem;
     background: #e2e8f0;
@@ -1144,11 +1146,13 @@ input, textarea, .current-sequence, .history-display {
     .zone-up, .zone-down {
         min-width: 162px; /* Exact width: 3 zones × 50px + 2 gaps × 6px = 150px + 12px = 162px */
         min-height: 45px; /* Closer to mobile button "1" height (50px) for better proportion */
+        max-height: 50px; /* Should not exceed mobile button "1" height */
         font-size: 0.9rem;
     }
 
     .zone-left, .zone-right {
         min-width: 45px; /* Closer to mobile button "1" width (50px) for better proportion */
+        max-width: 50px; /* Should not exceed mobile button "1" width */
         min-height: 162px; /* Exact height: 3 zones × 50px + 2 gaps × 6px = 150px + 12px = 162px */
         font-size: 0.9rem;
         writing-mode: vertical-rl;
